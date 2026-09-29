@@ -8,6 +8,11 @@
 
     <h1>Travel Buddy Finder</h1>
 
+    <hr>
+
+    <!-- 1. ADD TRAVEL BUDDY -->
+    <h2>1. Add Travel Buddy</h2>
+
     <form action="/travellers" method="POST">
 
         <label>Buddy ID:</label>
@@ -53,6 +58,285 @@
         <button type="submit">Add Travel Buddy</button>
 
     </form>
+
+    <hr>
+
+
+    <!-- 2. SEARCH DESTINATION AND BUDGET -->
+    <h2>2. Search by Destination and Budget</h2>
+
+    <form action="/search-destination" method="GET">
+
+        <label>Destination:</label>
+        <input type="text" name="destination" required>
+
+        <label>Budget Greater Than:</label>
+        <input type="number" name="budget" required>
+
+        <button type="submit">Search</button>
+
+    </form>
+
+    <hr>
+
+
+    <!-- 3. SEARCH BY BUDDY ID -->
+    <h2>3. Search Buddy by Buddy ID</h2>
+
+    <form id="searchBuddyForm">
+
+        <label>Buddy ID:</label>
+        <input type="text" id="searchId" required>
+
+        <button type="submit">Search</button>
+
+    </form>
+
+    <pre id="searchResult"></pre>
+
+    <hr>
+
+
+    <!-- 4. DISPLAY SELECTED DETAILS -->
+    <h2>4. Display Name, Destination, Budget and Trip Duration</h2>
+
+    <form id="detailsForm">
+
+        <label>Buddy ID:</label>
+        <input type="text" id="detailsId" required>
+
+        <button type="submit">Display Details</button>
+
+    </form>
+
+    <pre id="detailsResult"></pre>
+
+    <hr>
+
+
+    <!-- 5. UPDATE DESTINATION AND BUDGET -->
+    <h2>5. Update Destination and Budget</h2>
+
+    <form id="updateForm">
+
+        <label>Buddy ID:</label>
+        <input type="text" id="updateId" required>
+        <br><br>
+
+        <label>New Destination:</label>
+        <input type="text" id="newDestination" required>
+        <br><br>
+
+        <label>New Budget:</label>
+        <input type="number" id="newBudget" required>
+        <br><br>
+
+        <button type="submit">Update Buddy</button>
+
+    </form>
+
+    <pre id="updateResult"></pre>
+
+    <hr>
+
+
+    <!-- 6. INCREASE BUDGET -->
+    <h2>6. Increase Budget for a Destination</h2>
+
+    <form id="increaseBudgetForm">
+
+        <label>Destination:</label>
+        <input type="text" id="increaseDestination" required>
+        <br><br>
+
+        <label>Increase Amount:</label>
+        <input type="number" id="increaseAmount" required>
+        <br><br>
+
+        <button type="submit">Increase Budget</button>
+
+    </form>
+
+    <pre id="increaseResult"></pre>
+
+    <hr>
+
+
+    <!-- 7. SEARCH BUDGET RANGE -->
+    <h2>7. Search Buddies by Budget Range</h2>
+
+    <form action="/budget-range" method="GET">
+
+        <label>Minimum Budget:</label>
+        <input type="number" name="min" required>
+
+        <label>Maximum Budget:</label>
+        <input type="number" name="max" required>
+
+        <button type="submit">Search</button>
+
+    </form>
+
+    <hr>
+
+
+    <!-- 8. DELETE BUDDY -->
+    <h2>8. Delete Travel Buddy</h2>
+
+    <form id="deleteForm">
+
+        <label>Buddy ID:</label>
+        <input type="text" id="deleteId" required>
+
+        <button type="submit">Delete Buddy</button>
+
+    </form>
+
+    <pre id="deleteResult"></pre>
+
+    <hr>
+
+
+    <!-- 9. DISPLAY ALL -->
+    <h2>9. Display All Travel Buddies</h2>
+
+    <button onclick="displayAll()">Display All Buddies</button>
+
+    <pre id="allResult"></pre>
+
+
+    <script>
+
+        // SEARCH BY BUDDY ID
+        document.getElementById("searchBuddyForm").onsubmit = async function(e) {
+
+            e.preventDefault();
+
+            const id = document.getElementById("searchId").value;
+
+            const response = await fetch("/buddy/" + id);
+
+            const data = await response.json();
+
+            document.getElementById("searchResult").textContent =
+                JSON.stringify(data, null, 2);
+        };
+
+
+        // DISPLAY SELECTED DETAILS
+        document.getElementById("detailsForm").onsubmit = async function(e) {
+
+            e.preventDefault();
+
+            const id = document.getElementById("detailsId").value;
+
+            const response = await fetch("/details/" + id);
+
+            const data = await response.json();
+
+            document.getElementById("detailsResult").textContent =
+                JSON.stringify(data, null, 2);
+        };
+
+
+        // UPDATE BUDDY
+        document.getElementById("updateForm").onsubmit = async function(e) {
+
+            e.preventDefault();
+
+            const id = document.getElementById("updateId").value;
+
+            const destination =
+                document.getElementById("newDestination").value;
+
+            const budget =
+                document.getElementById("newBudget").value;
+
+            const response = await fetch("/update/" + id, {
+
+                method: "PUT",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+                    destination: destination,
+                    budget: budget
+                })
+            });
+
+            const data = await response.json();
+
+            document.getElementById("updateResult").textContent =
+                JSON.stringify(data, null, 2);
+        };
+
+
+        // INCREASE BUDGET
+        document.getElementById("increaseBudgetForm").onsubmit =
+            async function(e) {
+
+            e.preventDefault();
+
+            const destination =
+                document.getElementById("increaseDestination").value;
+
+            const amount =
+                document.getElementById("increaseAmount").value;
+
+            const response = await fetch("/increase-budget", {
+
+                method: "PUT",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+                    destination: destination,
+                    amount: amount
+                })
+            });
+
+            const data = await response.json();
+
+            document.getElementById("increaseResult").textContent =
+                JSON.stringify(data, null, 2);
+        };
+
+
+        // DELETE BUDDY
+        document.getElementById("deleteForm").onsubmit =
+            async function(e) {
+
+            e.preventDefault();
+
+            const id = document.getElementById("deleteId").value;
+
+            const response = await fetch("/delete/" + id, {
+                method: "DELETE"
+            });
+
+            const data = await response.json();
+
+            document.getElementById("deleteResult").textContent =
+                JSON.stringify(data, null, 2);
+        };
+
+
+        // DISPLAY ALL BUDDIES
+        async function displayAll() {
+
+            const response = await fetch("/all");
+
+            const data = await response.json();
+
+            document.getElementById("allResult").textContent =
+                JSON.stringify(data, null, 2);
+        }
+
+    </script>
 
 </body>
 </html>

@@ -1,57 +1,346 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Campus Club Members</title>
+    <title>Campus Club Member Management</title>
 </head>
 
 <body>
 
-    <h1>Campus Club Member Management</h1>
+<h1>Campus Club Member Management</h1>
 
-    <form action="/members" method="POST">
+<hr>
 
-        <label>Member ID:</label>
-        <input type="text" name="memberId" required>
-        <br><br>
+<!-- 1. ADD MEMBER -->
+<h2>1. Add Campus Club Member</h2>
 
-        <label>Name:</label>
-        <input type="text" name="name" required>
-        <br><br>
+<form action="/members" method="POST">
 
-        <label>Club Name:</label>
-        <input type="text" name="clubName" required>
-        <br><br>
+    <label>Member ID:</label>
+    <input type="text" name="memberId" required>
+    <br><br>
 
-        <label>Year of Study:</label>
-        <input type="number" name="year" required>
-        <br><br>
+    <label>Name:</label>
+    <input type="text" name="name" required>
+    <br><br>
 
-        <label>Role:</label>
-        <input type="text" name="role" required>
-        <br><br>
+    <label>Club Name:</label>
+    <input type="text" name="clubName" required>
+    <br><br>
 
-        <label>Points:</label>
-        <input type="number" name="points" required>
-        <br><br>
+    <label>Year of Study:</label>
+    <input type="number" name="year" required>
+    <br><br>
 
-        <label>Interests:</label>
-        <input type="text"
-               name="interests"
-               placeholder="Coding, Music, Sports"
-               required>
-        <br><br>
+    <label>Role:</label>
+    <input type="text" name="role" required>
+    <br><br>
 
-        <label>Status:</label>
-        <select name="status" required>
-            <option value="Active">Active</option>
-            <option value="Inactive">Inactive</option>
-        </select>
+    <label>Points:</label>
+    <input type="number" name="points" required>
+    <br><br>
 
-        <br><br>
+    <label>Interests:</label>
+    <input type="text"
+           name="interests"
+           placeholder="Coding, Music, Sports"
+           required>
+    <br><br>
 
-        <button type="submit">Add Member</button>
+    <label>Status:</label>
+    <select name="status" required>
+        <option value="Active">Active</option>
+        <option value="Inactive">Inactive</option>
+    </select>
 
-    </form>
+    <br><br>
+
+    <button type="submit">Add Member</button>
+
+</form>
+
+<hr>
+
+
+<!-- 2. SEARCH CLUB + POINTS -->
+<h2>2. Search Members by Club and Points</h2>
+
+<form action="/search-club" method="GET">
+
+    <label>Club Name:</label>
+    <input type="text" name="club" required>
+
+    <label>Points Greater Than:</label>
+    <input type="number" name="points" required>
+
+    <button type="submit">Search</button>
+
+</form>
+
+<hr>
+
+
+<!-- 3. SEARCH MEMBER BY ID -->
+<h2>3. Search Member by Member ID</h2>
+
+<form id="searchMemberForm">
+
+    <label>Member ID:</label>
+    <input type="text" id="searchId" required>
+
+    <button type="submit">Search Member</button>
+
+</form>
+
+<pre id="searchResult"></pre>
+
+<hr>
+
+
+<!-- 4. DISPLAY SELECTED FIELDS -->
+<h2>4. Display Name, Club Name, Role and Points</h2>
+
+<form id="detailsForm">
+
+    <label>Member ID:</label>
+    <input type="text" id="detailsId" required>
+
+    <button type="submit">Display Details</button>
+
+</form>
+
+<pre id="detailsResult"></pre>
+
+<hr>
+
+
+<!-- 5. UPDATE ROLE AND POINTS -->
+<h2>5. Update Role and Points</h2>
+
+<form id="updateForm">
+
+    <label>Member ID:</label>
+    <input type="text" id="updateId" required>
+    <br><br>
+
+    <label>New Role:</label>
+    <input type="text" id="newRole" required>
+    <br><br>
+
+    <label>New Points:</label>
+    <input type="number" id="newPoints" required>
+    <br><br>
+
+    <button type="submit">Update Member</button>
+
+</form>
+
+<pre id="updateResult"></pre>
+
+<hr>
+
+
+<!-- 6. INCREASE POINTS -->
+<h2>6. Increase Points for a Club</h2>
+
+<form id="increasePointsForm">
+
+    <label>Club Name:</label>
+    <input type="text" id="increaseClub" required>
+    <br><br>
+
+    <label>Points to Add:</label>
+    <input type="number" id="increasePoints" required>
+    <br><br>
+
+    <button type="submit">Increase Points</button>
+
+</form>
+
+<pre id="increaseResult"></pre>
+
+<hr>
+
+
+<!-- 7. SEARCH POINTS RANGE -->
+<h2>7. Search Members by Points Range</h2>
+
+<form action="/points-range" method="GET">
+
+    <label>Minimum Points:</label>
+    <input type="number" name="min" required>
+
+    <label>Maximum Points:</label>
+    <input type="number" name="max" required>
+
+    <button type="submit">Search</button>
+
+</form>
+
+<hr>
+
+
+<!-- 8. DELETE MEMBER -->
+<h2>8. Delete Member</h2>
+
+<form id="deleteForm">
+
+    <label>Member ID:</label>
+    <input type="text" id="deleteId" required>
+
+    <button type="submit">Delete Member</button>
+
+</form>
+
+<pre id="deleteResult"></pre>
+
+<hr>
+
+
+<!-- 9. DISPLAY ALL MEMBERS -->
+<h2>9. Display All Members</h2>
+
+<button onclick="displayAll()">
+    Display All Members
+</button>
+
+<pre id="allResult"></pre>
+
+
+<script>
+
+// SEARCH MEMBER BY ID
+document.getElementById("searchMemberForm").onsubmit =
+async function(e) {
+
+    e.preventDefault();
+
+    const id = document.getElementById("searchId").value;
+
+    const response = await fetch("/member/" + id);
+
+    const data = await response.json();
+
+    document.getElementById("searchResult").textContent =
+        JSON.stringify(data, null, 2);
+};
+
+
+// DISPLAY SELECTED DETAILS
+document.getElementById("detailsForm").onsubmit =
+async function(e) {
+
+    e.preventDefault();
+
+    const id = document.getElementById("detailsId").value;
+
+    const response = await fetch("/details/" + id);
+
+    const data = await response.json();
+
+    document.getElementById("detailsResult").textContent =
+        JSON.stringify(data, null, 2);
+};
+
+
+// UPDATE MEMBER
+document.getElementById("updateForm").onsubmit =
+async function(e) {
+
+    e.preventDefault();
+
+    const id = document.getElementById("updateId").value;
+
+    const role = document.getElementById("newRole").value;
+
+    const points = document.getElementById("newPoints").value;
+
+    const response = await fetch("/update/" + id, {
+
+        method: "PUT",
+
+        headers: {
+            "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+            role: role,
+            points: points
+        })
+
+    });
+
+    const data = await response.json();
+
+    document.getElementById("updateResult").textContent =
+        JSON.stringify(data, null, 2);
+};
+
+
+// INCREASE POINTS
+document.getElementById("increasePointsForm").onsubmit =
+async function(e) {
+
+    e.preventDefault();
+
+    const clubName =
+        document.getElementById("increaseClub").value;
+
+    const points =
+        document.getElementById("increasePoints").value;
+
+    const response = await fetch("/increase-points", {
+
+        method: "PUT",
+
+        headers: {
+            "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+            clubName: clubName,
+            points: points
+        })
+
+    });
+
+    const data = await response.json();
+
+    document.getElementById("increaseResult").textContent =
+        JSON.stringify(data, null, 2);
+};
+
+
+// DELETE MEMBER
+document.getElementById("deleteForm").onsubmit =
+async function(e) {
+
+    e.preventDefault();
+
+    const id = document.getElementById("deleteId").value;
+
+    const response = await fetch("/delete/" + id, {
+        method: "DELETE"
+    });
+
+    const data = await response.json();
+
+    document.getElementById("deleteResult").textContent =
+        JSON.stringify(data, null, 2);
+};
+
+
+// DISPLAY ALL MEMBERS
+async function displayAll() {
+
+    const response = await fetch("/all");
+
+    const data = await response.json();
+
+    document.getElementById("allResult").textContent =
+        JSON.stringify(data, null, 2);
+}
+
+</script>
 
 </body>
 </html>
