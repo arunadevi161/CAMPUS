@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Travel Buddy Finder</title>
+</head>
+
+<body>
+
+    <h1>Travel Buddy Finder</h1>
+
+    <form action="/travellers" method="POST">
+
+        <label>Buddy ID:</label>
+        <input type="text" name="buddyId" required>
+        <br><br>
+
+        <label>Name:</label>
+        <input type="text" name="name" required>
+        <br><br>
+
+        <label>Destination:</label>
+        <input type="text" name="destination" required>
+        <br><br>
+
+        <label>Age:</label>
+        <input type="number" name="age" required>
+        <br><br>
+
+        <label>Budget:</label>
+        <input type="number" name="budget" required>
+        <br><br>
+
+        <label>Trip Duration:</label>
+        <input type="number" name="tripDuration" required>
+        <br><br>
+
+        <label>Interests:</label>
+        <input type="text"
+               name="interests"
+               placeholder="Hiking, Photography, Food"
+               required>
+        <br><br>
+
+        <label>Status:</label>
+        <select name="status" required>
+            <option value="Active">Active</option>
+            <option value="Planning">Planning</option>
+            <option value="Completed">Completed</option>
+        </select>
+
+        <br><br>
+
+        <button type="submit">Add Travel Buddy</button>
+
+    </form>
+
+</body>
+</html>
